@@ -6,29 +6,26 @@ def addQuadrature(items):
         sum += items[i] ** 2
     return sum
 
-def calculateDerivative(equation, variables, valueReplacements = {}):
-    query = {"_key": "s123456", "equation": equation, "variables": ",".join(variables)}
+def determinePartialDerivatives(expression, variables):
+    query = {"_key": "s123456", "equation": expression, "variables": ",".join(variables)}
 
-    response = requests.get('https://www.wolframcloud.com/obj/c63c2a45-29d6-4b06-a847-d7b0174b081b', params = query)
+    response = requests.get('https://www.wolframcloud.com/obj/9fded9fa-60fa-44eb-a981-a5e6e4ced725', params = query)
 
     if response.status_code == 200:        
         derivatives = response.text.strip("{} ").split(", ")
         derivatives = [derivative.strip() for derivative in derivatives]
         
-        error = "Sqrt[" + " + ".join(["Power[" + derivatives[i] + " * d" + variables[i] + ", 2]" for i in range(len(variables))]) + "]"
+        return derivatives
 
-        if valueReplacements:
-            value = calculate(error, valueReplacements)
-            return (error, value)
-
-        return error
-    
     return None
 
-def calculate(equation, values):
-    query = {"_key": "s123456", "equation": equation, "values": "{" + ",".join([key + '->' + str(value) for key, value in values.items()]) + "}"}
+def determineErrorExpression(derivatives, variables):
+    return "Sqrt[" + " + ".join(["Power[" + derivatives[i] + " * d" + variables[i] + ", 2]" for i in range(len(variables))]) + "]"
 
-    response = requests.get('https://www.wolframcloud.com/obj/c4b5e27d-ec4e-409a-a607-8d4779c35019', params = query)
+def evaluateExpression(expression, values):
+    query = {"_key": "s123456", "equation": expression, "values": "{" + ",".join([key + '->' + str(value) for key, value in values.items()]) + "}"}
+
+    response = requests.get('https://www.wolframcloud.com/obj/2ae6436e-7168-46b8-822a-8a85a3f906b4', params = query)
 
     if response.status_code == 200:
         value = float(response.text)

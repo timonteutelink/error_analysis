@@ -1,13 +1,15 @@
+#%%
+from expression import Expression
 from uncertainValue import UncertainValue
-from formula import calculateFormula, UncertainValue
 
-def main():
-    L = UncertainValue(20, absolute = True, error = 0.1, valueUnit=("L", "m"))
-    W = UncertainValue(40, absolute = True, error = 0.2, valueUnit=("W", "m"))
+#%%
+length = UncertainValue(18, absolute=True, error=0.1 * 10 ** -3, label="l [m]")
+width = UncertainValue(26, absolute=True, error=0.1 * 10 ** -2, label="w [m]")
 
-    C = calculateFormula("2 * W + 2 * L", [L, W], valueUnit=("C", "m"))
-    print(C)
-    
+A = Expression("l * w", label = "A [m^2]")
+A.setVariable("l", length)
+A.setVariable("w", width)
+print(A)
 
-if __name__ == "__main__":
-    main()
+#%%
+
