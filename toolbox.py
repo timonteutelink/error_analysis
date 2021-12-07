@@ -1,4 +1,5 @@
 import requests
+import numpy as np
 
 def addQuadrature(items):
     sum = 0
@@ -33,3 +34,8 @@ def evaluateExpression(expression, values):
 
     return None
 
+def isNumber(value):
+    return type(value) == int or type(value) == float
+
+def isNumpyArray(array):
+    return isinstance(array, np.ndarray)

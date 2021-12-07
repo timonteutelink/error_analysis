@@ -3,6 +3,7 @@ from uncertainValue import UncertainValue
 import toolbox
 
 #add erro handling and checks if wolfram messages arent completed and cant get uncertainvalue
+# add support for uncertainvaluelists (requires wolframcloud edit and toolbox edit)
 
 class Expression():
     """
