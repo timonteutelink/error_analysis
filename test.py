@@ -56,10 +56,10 @@ L = UncertainValueList(
     "f0 [Hz]"
 )
 V = UncertainValueList(
-    (320 - np.array([0, 50, 95, 135, 160, 240, 260, 300, 210, 240, 285, 295])) * 10 ** -6,
+    (320 - np.array([0.0001, 50, 95, 135, 160, 240, 260, 300, 210, 240, 285, 295])) * 10 ** -6,
     15 * 10 ** -6,
     "f0 [Hz]"
 )
 
 plotter.fitLinearData(f0 ** 2, V ** -1)
-plotter.fitLinearData((f0 * 4) ** -1, L)
+plotter.fitLinearData(1 / (f0 * 4), L)

@@ -41,19 +41,21 @@ def plotData(x, y, title=None):
 def fitLinearData(x, y):
     """
     inputs x and y are expected to be uncertainvaluelists
+    returns output of linearfitgui
     """
 
     if not isinstance(x, UncertainValueList) or not isinstance(y, UncertainValueList):
         raise ValueError("inputs are not of instance UncertainValueList")
     
-    curvefitgui.linear_fit_gui(x.values, y.values, xerr=x.absoluteErrors, yerr=y.absoluteErrors, xlabel=x.label, ylabel=y.label)
+    return curvefitgui.linear_fit_gui(x.values, y.values, xerr=x.absoluteErrors, yerr=y.absoluteErrors, xlabel=x.label, ylabel=y.label)
 
 def fitData(fitFunction, x, y):
     """
     inputs x and y are expected to be uncertainvaluelists
+    returns output of curvefitgui
     """
 
     if not isinstance(x, UncertainValueList) or not isinstance(y, UncertainValueList):
         raise ValueError("inputs are not of instance UncertainValueList")
     
-    curvefitgui.linear_fit_gui(fitFunction, x.values, y.values, xerr=x.absoluteErrors, yerr=y.absoluteErrors, xlabel=x.label, ylabel=y.label)
+    return curvefitgui.linear_fit_gui(fitFunction, x.values, y.values, xerr=x.absoluteErrors, yerr=y.absoluteErrors, xlabel=x.label, ylabel=y.label)

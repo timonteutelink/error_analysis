@@ -46,36 +46,86 @@ class UncertainValue:
     def __add__(self, other):
         if isNumber(other):
             return UncertainValue(self.value + other, self.absoluteError, label=self.label)
-        elif isinstance(other, UncertainValue):
-            absoluteError = np.sqrt(addQuadrature([self.absoluteError, other.absoluteError]))
-            return UncertainValue(self.value + other.value, absoluteError, label=f"({self.label}) + ({other.label})")
+        
+        if isinstance(other, UncertainValue):
+            newLabel = None
+            if self.label is not None and other.label is None:
+                newLabel = self.label
+            elif self.label is None and other.label is not None:
+                newLabel = other.label
+            elif self.label is not None and other.label is not None:
+                newLabel = f"({self.label}) + ({other.label})"
+
+            absoluteErrors = np.sqrt(addQuadrature([self.absoluteError, other.absoluteError]))
+            return UncertainValue(self.value + other.value, absoluteErrors, label=newLabel)
+                
         raise ValueError("Operation not supported yet")
+
+    __radd__ = __add__
 
     def __sub__(self, other):
         if isNumber(other):
             return UncertainValue(self.value - other, self.absoluteError, label=self.label)
-        elif isinstance(other, UncertainValue):
-            absoluteError = np.sqrt(addQuadrature([self.absoluteError, other.absoluteError]))
-            return UncertainValue(self.value - other.value, absoluteError, label=f"({self.label}) - ({other.label})")
+        
+        if isinstance(other, UncertainValue):
+            newLabel = None
+            if self.label is not None and other.label is None:
+                newLabel = self.label
+            elif self.label is None and other.label is not None:
+                newLabel = other.label
+            elif self.label is not None and other.label is not None:
+                newLabel = f"({self.label}) - ({other.label})"
+
+            absoluteErrors = np.sqrt(addQuadrature([self.absoluteError, other.absoluteError]))
+            return UncertainValue(self.value - other.value, absoluteErrors, label=newLabel)
+        
         raise ValueError("Operation not supported yet")
+
+    def __rsub__(self, other):
+        return other - self
 
     def __mul__(self, other): # add all possibilites for magic methods so you can create normal equations without wolfram.
         if isNumber(other):
             return UncertainValue(self.value * other, self.absoluteError * other, label=self.label)
-        elif isinstance(other, UncertainValue):
+        
+        if isinstance(other, UncertainValue):
+            newLabel = None
+            if self.label is not None and other.label is None:
+                newLabel = self.label
+            elif self.label is None and other.label is not None:
+                newLabel = other.label
+            elif self.label is not None and other.label is not None:
+                newLabel = f"({self.label}) * ({other.label})"
+
             newValue = self.value * other.value
             relativeError = newValue * np.sqrt(addQuadrature([self.relativeError, other.relativeError]))
-            return UncertainValue(newValue, relativeError, absolute = False, label=f"({self.label}) * ({other.label})")
+            return UncertainValue(newValue, relativeError, absolute = False, label=newLabel)
+        
         raise ValueError("Operation not supported yet")
+
+    __rmul__ = __mul__
 
     def __truediv__(self, other):
         if isNumber(other):
             return UncertainValue(self.value / other, self.absoluteError / other, label=self.label)
-        elif isinstance(other, UncertainValue):
+        
+        if isinstance(other, UncertainValue):
+            newLabel = None
+            if self.label is not None and other.label is None:
+                newLabel = self.label
+            elif self.label is None and other.label is not None:
+                newLabel = other.label
+            elif self.label is not None and other.label is not None:
+                newLabel = f"({self.label}) * ({other.label})"
+
             newValue = self.value / other.value
             relativeError = newValue * np.sqrt(addQuadrature([self.relativeError, other.relativeError]))
-            return UncertainValue(newValue, relativeError, absolute = False, label=f"({self.label}) / ({other.label})")
+            return UncertainValue(newValue, relativeError, absolute = False, label=newLabel)
+        
         raise ValueError("Operation not supported yet")
+
+    def __rtruediv__(self, other):
+        return other * self ** -1
 
     def __pow__(self, exponent):
         if isNumber(exponent):
